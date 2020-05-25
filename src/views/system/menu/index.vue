@@ -99,6 +99,18 @@
       </div>
     </el-dialog>
     <!--表格渲染-->
+
+    <el-row style="margin-top:10px;">
+      <ClassTreeTable
+        rel="panel"
+        :class-name="className"
+        :search="search"
+        :row-btns="rowBtns"
+        :columns="columns"
+        :expand="expand"
+        :format="format"
+      />
+    </el-row>
     <el-table
       ref="table"
       v-loading="crud.loading"
@@ -171,14 +183,15 @@ import CRUD, { presenter, header, form, crud } from '@crud/crud'
 import rrOperation from '@crud/RR.operation'
 import crudOperation from '@crud/CRUD.operation'
 import udOperation from '@crud/UD.operation'
+import ClassTreeTable from '@/components/Parse/ClassTreeTable'
 
 // crud交由presenter持有
 const defaultForm = { id: null, title: null, menuSort: 999, path: null, component: null, componentName: null, iframe: false, roles: [], pid: 0, icon: null, cache: false, hidden: false, type: 0, permission: null }
 export default {
   name: 'Menu',
-  components: { Treeselect, IconSelect, crudOperation, rrOperation, udOperation },
+  components: { ClassTreeTable, Treeselect, IconSelect, crudOperation, rrOperation, udOperation },
   cruds() {
-    return CRUD({ title: '菜单', url: 'api/menus', crudMethod: { ...crudMenu }})
+    return CRUD({ title: '菜单', url: 'classes/Menu', crudMethod: { ...crudMenu }})
   },
   mixins: [presenter(), header(), form(defaultForm), crud()],
   data() {
@@ -196,7 +209,33 @@ export default {
         path: [
           { required: true, message: '请输入地址', trigger: 'blur' }
         ]
+      },
+
+      className: 'menu',
+      search: {
+        key: 'name',
+        value: '',
+        opts: [
+          { label: '菜单名称', key: 'name' }]
+      },
+      columns: [
+        { field: 'name', label: '菜单标题', isTitle: true, show: true, align: 'left' },
+        { field: 'icon', label: '图标', show: true, type: 'icon' },
+        { field: 'orderBy', label: '排序', show: true },
+        { field: 'url', label: '菜单路径', show: true, align: 'left' },
+        { field: 'createdAt', label: '创建时间', show: true }
+      ],
+      rowBtns: [
+        { label: '详情', click: this.handleDetail, type: 'success', icon: 'el-icon-info' },
+        { label: '编辑', click: this.handleEdit, type: 'primary', icon: 'el-icon-edit' }
+      ],
+      expand: [
+        { field: 'createdAt', label: '创建时间', show: true }
+      ],
+      format: function(property, cellValue) {
+        return cellValue
       }
+
     }
   },
   methods: {
@@ -249,6 +288,15 @@ export default {
     // 选中图标
     selected(name) {
       this.form.icon = name
+    },
+
+    handleCreate() {
+    },
+    handleEdit(item) {
+      console.log(item)
+    },
+    handleDetail(item) {
+      console.log(item)
     }
   }
 }

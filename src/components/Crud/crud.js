@@ -131,6 +131,7 @@ function CRUD(options) {
       return new Promise((resolve, reject) => {
         crud.loading = true
         // 请求数据
+        console.log(crud.url)
         initData(crud.url, crud.getQueryParams()).then(data => {
           const table = crud.getTable()
           if (table.lazy) { // 懒加载子节点数据，清掉已加载的数据

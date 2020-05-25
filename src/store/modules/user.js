@@ -69,7 +69,9 @@ const user = {
       return new Promise((resolve, reject) => {
         get_users_me({ 'sessionToken': user.state.token }).then(res => {
           // setToken(res.sessionToken, rememberMe)
-          // setUserInfo(res, commit)
+          // @todo 这个地方服务器API返回要改 zwx
+          res.roles = res.roles ? res.roles : []
+          setUserInfo(res, commit)
           const { objectId, username, nick, avatar } = res
           commit('SET_NAME', username)
           commit('SET_USERID', objectId)
