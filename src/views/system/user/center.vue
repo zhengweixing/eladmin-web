@@ -106,6 +106,7 @@
 </template>
 
 <script>
+import Avatar from '@/assets/images/logo.png'
 import { mapGetters } from 'vuex'
 import updatePass from './center/updatePass'
 import updateEmail from './center/updateEmail'
@@ -115,7 +116,6 @@ import { isvalidPhone } from '@/utils/validate'
 import { parseTime } from '@/utils/index'
 import crud from '@/mixins/crud'
 import { editUser } from '@/api/system/user'
-import Avatar from '@/assets/images/avatar.png'
 export default {
   name: 'Center',
   components: { updatePass, updateEmail },

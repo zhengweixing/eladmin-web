@@ -1,21 +1,34 @@
-import { login, getInfo, logout } from '@/api/login'
 import { getToken, setToken, removeToken } from '@/utils/auth'
+import { get_login, get_users_me, post_logout } from '@/api/iotapi'
 
 const user = {
   state: {
     token: getToken(),
     user: {},
     roles: [],
+    avatar: '',
     // 第一次加载菜单时用到
     loadMenus: false
   },
 
   mutations: {
+    SET_USER: (state, user) => {
+      state.user = user
+    },
     SET_TOKEN: (state, token) => {
       state.token = token
     },
-    SET_USER: (state, user) => {
-      state.user = user
+    SET_NAME: (state, name) => {
+      state.name = name
+    },
+    SET_AVATAR: (state, avatar) => {
+      state.avatar = avatar
+    },
+    SET_USERID: (state, userid) => {
+      state.userid = userid
+    },
+    SET_NICK: (state, nick) => {
+      state.nick = nick
     },
     SET_ROLES: (state, roles) => {
       state.roles = roles
@@ -28,12 +41,20 @@ const user = {
   actions: {
     // 登录
     Login({ commit }, userInfo) {
+      console.log('11111')
       const rememberMe = userInfo.rememberMe
       return new Promise((resolve, reject) => {
-        login(userInfo.username, userInfo.password, userInfo.code, userInfo.uuid).then(res => {
-          setToken(res.token, rememberMe)
-          commit('SET_TOKEN', res.token)
-          setUserInfo(res.user, commit)
+        get_login(userInfo).then(res => {
+          setToken(res.sessionToken, rememberMe)
+          commit('SET_TOKEN', res.sessionToken)
+          commit('SET_ROLES', res.roles)
+          setUserInfo(res, commit)
+          const { objectId, username, nick, avatar } = res
+          commit('SET_NAME', username)
+          commit('SET_USERID', objectId)
+          commit('SET_TOKEN', res.sessionToken)
+          commit('SET_NICK', nick)
+          commit('SET_AVATAR', avatar)
           // 第一次加载菜单时用到， 具体见 src 目录下的 permission.js
           commit('SET_LOAD_MENUS', true)
           resolve()
@@ -46,25 +67,38 @@ const user = {
     // 获取用户信息
     GetInfo({ commit }) {
       return new Promise((resolve, reject) => {
-        getInfo().then(res => {
-          setUserInfo(res, commit)
+        get_users_me({ 'sessionToken': user.state.token }).then(res => {
+          // setToken(res.sessionToken, rememberMe)
+          // setUserInfo(res, commit)
+          const { objectId, username, nick, avatar } = res
+          commit('SET_NAME', username)
+          commit('SET_USERID', objectId)
+          commit('SET_TOKEN', res.sessionToken)
+          commit('SET_NICK', nick)
+          commit('SET_AVATAR', avatar)
+          // commit('SET_ROLES', roles)
           resolve(res)
         }).catch(error => {
           reject(error)
         })
       })
     },
+
     // 登出
     LogOut({ commit }) {
-      return new Promise((resolve, reject) => {
-        logout().then(res => {
-          logOut(commit)
-          resolve()
-        }).catch(error => {
-          logOut(commit)
-          reject(error)
+      if (user.state.token) {
+        return new Promise((resolve, reject) => {
+          post_logout({ 'sessionToken': user.state.token }).then(res => {
+            logOut(commit)
+            resolve()
+          }).catch(error => {
+            logOut(commit)
+            reject(error)
+          })
         })
-      })
+      } else {
+        logOut(commit)
+      }
     },
 
     updateLoadMenus({ commit }) {

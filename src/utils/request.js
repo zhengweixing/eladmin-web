@@ -1,13 +1,15 @@
 import axios from 'axios'
 import router from '@/router/routers'
-import { Notification, MessageBox } from 'element-ui'
+import { MessageBox, Message } from 'element-ui'
 import store from '../store'
 import { getToken } from '@/utils/auth'
 import Config from '@/settings'
+import { Error } from '@/utils/errorMsg'
 
 // 创建axios实例
 const service = axios.create({
-  baseURL: process.env.NODE_ENV === 'production' ? process.env.VUE_APP_BASE_API : '/', // api 的 base_url
+  baseURL: process.env.VUE_APP_BASE_API, // url = base url + request url
+  // withCredentials: true, // send cookies when cross-domain requests
   timeout: Config.timeout // 请求超时时间
 })
 
@@ -15,7 +17,7 @@ const service = axios.create({
 service.interceptors.request.use(
   config => {
     if (getToken()) {
-      config.headers['Authorization'] = getToken() // 让每个请求携带自定义token 请根据实际情况自行修改
+      config.headers['sessionToken'] = getToken()
     }
     config.headers['Content-Type'] = 'application/json'
     return config
@@ -41,49 +43,52 @@ service.interceptors.response.use(
     }
   },
   error => {
-    let code = 0
-    try {
-      code = error.response.data.status
-    } catch (e) {
-      if (error.toString().indexOf('Error: timeout') !== -1) {
-        Notification.error({
-          title: '网络请求超时',
-          duration: 5000
+    console.log(1111)
+    const res = error.response
+    const status = res.status
+    switch (status) {
+      case 404:
+        Message({
+          message: Error(res.data.error ? res.data.error : res.statusText).msg,
+          type: 'error',
+          duration: 5 * 1000
         })
-        return Promise.reject(error)
-      }
-    }
-    if (code) {
-      if (code === 401) {
-        MessageBox.confirm(
-          '登录状态已过期，您可以继续留在该页面，或者重新登录',
-          '系统提示',
-          {
-            confirmButtonText: '重新登录',
-            cancelButtonText: '取消',
-            type: 'warning'
-          }
-        ).then(() => {
-          store.dispatch('LogOut').then(() => {
-            location.reload() // 为了重新实例化vue-router对象 避免bug
-          })
+        break
+      case 400:
+      case 500:
+        Message({
+          message: Error(res.data.error ? res.data.error : res.data).msg,
+          type: 'error',
+          duration: 5 * 1000
         })
-      } else if (code === 403) {
+        break
+      case 403:
+        Message({
+          message: Error(res.data.error ? res.data.error : res.data).msg,
+          type: 'error',
+          duration: 5 * 1000
+        })
         router.push({ path: '/401' })
-      } else {
-        const errorMsg = error.response.data.message
-        if (errorMsg !== undefined) {
-          Notification.error({
-            title: errorMsg,
-            duration: 5000
-          })
+        break
+      case 401:
+        MessageBox.confirm(Error(res.data.error).msg, '系统提示', {
+          confirmButtonText: '重新登录',
+          cancelButtonText: '取消',
+          type: 'warning'
         }
-      }
-    } else {
-      Notification.error({
-        title: '接口请求失败',
-        duration: 5000
-      })
+        ).then(() => {
+          store.dispatch('user/resetToken').then(() => {
+            location.reload()
+          })
+        })
+        break
+      default:
+        Message({
+          message: Error(error).msg,
+          type: 'error',
+          duration: 5 * 1000
+        })
+        break
     }
     return Promise.reject(error)
   }

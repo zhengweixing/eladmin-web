@@ -1,41 +1,55 @@
-# ELADMIN-WEB
-
-ELADMIN 前端源码
-
-#### 项目源码
-
-|     |   后端源码  |   前端源码  |
-|---  |--- | --- |
-|  github   |  https://github.com/elunez/eladmin   |  https://github.com/elunez/eladmin-web   |
-|  码云   |  https://gitee.com/elunez/eladmin   |  https://gitee.com/elunez/eladmin-web   |
+# iotAdmin
+物联网管理后台
 
 #### 开发文档
 [https://docs.auauz.net/#/](https://docs.auauz.net/#/)
 
-#### 前端模板
 
-初始模板基于： [https://github.com/PanJiaChen/vue-element-admin](https://github.com/PanJiaChen/vue-element-admin)
+*****************************
 
-模板文档： [https://panjiachen.github.io/vue-element-admin-site/zh/guide/](https://panjiachen.github.io/vue-element-admin-site/zh/guide/)
+# 功能
+    1. 登录, 退出，获取个人信息
+    2. 动态左侧菜单
+    3. 
 
-#### Build Setup
-``` bash
-# 配置镜像加速
-npm config set registry https://registry.npm.taobao.org
+****************************
+# 编译安装
 
-# 安装依赖
-npm install
+## 克隆项目
+    git clone git@github.com:zhengweixing/eladmin-web.git
 
-# 启动服务 localhost:8013
-npm run dev
+## 进入项目目录
+    cd eladmin-web
 
-# 构建生产环境
-npm run build
+## 安装依赖
+    npm install
 
-# 如果遇到 node-sass 安装慢，或者安装不了的问题，请查看
-- https://www.ydyno.com/archives/1219.html
--
+    npm install --registry=https://registry.npm.taobao.org
+
+## 根据swagger产生API
+参考 https://www.npmjs.com/package/swagger-vue-generator
+
+### 安装swagger-vue-generator
+
+    npm install --save-dev swagger-vue-generator
+
+### 将swagger文件放入public目录下
+
+### 执行生成API
 ```
+node ./node_modules/swagger-vue-generator/bin/generate-api.js -s public/swagger.json -d src/api/iota
+pi.js -m iot-api
+```
+
+### 生成文档
+```
+node ./node_modules/swagger-vue-generator/bin/generate-doc.js -s public/swagger.json -d public/edoc/ -m iot-api --model-path=models --doc-path=api
+```
+
+## 启动服务
+    npm run dev
+ 
+
 
 #### 常见问题
 
@@ -57,6 +71,8 @@ npm config set registry https://registry.npm.taobao.org
 3、加速node-sass安装
 
 https://www.ydyno.com/archives/1219.html
-#### 反馈交流
 
-- QQ交流群：891137268
+
+- 交流
+``` 
+微信 zh-12306

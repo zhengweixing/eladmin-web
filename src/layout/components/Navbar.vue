@@ -8,10 +8,6 @@
       <template v-if="device!=='mobile'">
         <search id="header-search" class="right-menu-item" />
 
-        <el-tooltip content="项目文档" effect="dark" placement="bottom">
-          <Doc class="right-menu-item hover-effect" />
-        </el-tooltip>
-
         <el-tooltip content="全屏缩放" effect="dark" placement="bottom">
           <screenfull id="screenfull" class="right-menu-item hover-effect" />
         </el-tooltip>
@@ -23,10 +19,14 @@
       </template>
 
       <el-dropdown class="avatar-container right-menu-item hover-effect" trigger="click">
+
         <div class="avatar-wrapper">
-          <img :src="user.avatarName ? baseApi + '/avatar/' + user.avatarName : Avatar" class="user-avatar">
+          <el-avatar :src="avatar+'?imageView2/1/w/80/h/80'" class="user-avatar" @error="true">
+            <i class="el-icon-s-custom" />
+          </el-avatar>
           <i class="el-icon-caret-bottom" />
         </div>
+
         <el-dropdown-menu slot="dropdown">
           <span style="display:block;" @click="show = true">
             <el-dropdown-item>
@@ -53,11 +53,10 @@
 import { mapGetters } from 'vuex'
 import Breadcrumb from '@/components/Breadcrumb'
 import Hamburger from '@/components/Hamburger'
-import Doc from '@/components/Doc'
+// import Doc from '@/components/Doc'
 import Screenfull from '@/components/Screenfull'
 import SizeSelect from '@/components/SizeSelect'
 import Search from '@/components/HeaderSearch'
-import Avatar from '@/assets/images/avatar.png'
 
 export default {
   components: {
@@ -65,21 +64,22 @@ export default {
     Hamburger,
     Screenfull,
     SizeSelect,
-    Search,
-    Doc
+    Search
+    // Doc
   },
   data() {
     return {
-      Avatar: Avatar,
       dialogVisible: false
     }
   },
   computed: {
     ...mapGetters([
       'sidebar',
+      'nick',
+      'name',
+      'userid',
       'device',
-      'user',
-      'baseApi'
+      'avatar'
     ]),
     show: {
       get() {
@@ -171,7 +171,9 @@ export default {
         }
       }
     }
-
+    .el-icon-s-custom{
+      font-size:35px;
+    }
     .avatar-container {
       margin-right: 30px;
 
