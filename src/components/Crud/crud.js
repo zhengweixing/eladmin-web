@@ -32,7 +32,7 @@ function CRUD(options) {
     // 重置表单
     defaultForm: () => {},
     // 排序规则，默认 id 降序， 支持多字段排序 ['id,desc', 'createTime,asc']
-    sort: ['id,desc'],
+    sort: ['-createdAt'],
     // 等待时间
     time: 50,
     // CRUD Method
@@ -349,9 +349,9 @@ function CRUD(options) {
         if (crud.params[item] === null || crud.params[item] === '') crud.params[item] = undefined
       })
       return {
-        page: crud.page.page - 1,
-        size: crud.page.size,
-        sort: crud.sort,
+        skip: crud.page.page - 1,
+        limit: crud.page.size,
+        order: crud.sort.join(','),
         ...crud.query,
         ...crud.params
       }

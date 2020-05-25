@@ -191,7 +191,7 @@ export default {
   name: 'Menu',
   components: { ClassTreeTable, Treeselect, IconSelect, crudOperation, rrOperation, udOperation },
   cruds() {
-    return CRUD({ title: '菜单', url: 'classes/Menu', crudMethod: { ...crudMenu }})
+    return CRUD({ title: '菜单', url: 'Menu', crudMethod: { ...crudMenu }})
   },
   mixins: [presenter(), header(), form(defaultForm), crud()],
   data() {
