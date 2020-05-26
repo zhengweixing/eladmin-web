@@ -99,18 +99,6 @@
       </div>
     </el-dialog>
     <!--表格渲染-->
-
-    <el-row style="margin-top:10px;">
-      <ClassTreeTable
-        rel="panel"
-        :class-name="className"
-        :search="search"
-        :row-btns="rowBtns"
-        :columns="columns"
-        :expand="expand"
-        :format="format"
-      />
-    </el-row>
     <el-table
       ref="table"
       v-loading="crud.loading"
@@ -124,7 +112,7 @@
       @selection-change="crud.selectionChangeHandler"
     >
       <el-table-column type="selection" width="55" />
-      <el-table-column :show-overflow-tooltip="true" label="菜单标题" width="125px" prop="title" />
+      <el-table-column :show-overflow-tooltip="true" label="菜单标题" width="125px" prop="name" />
       <el-table-column prop="icon" label="图标" align="center" width="60px">
         <template slot-scope="scope">
           <svg-icon :icon-class="scope.row.icon ? scope.row.icon : ''" />
@@ -132,11 +120,10 @@
       </el-table-column>
       <el-table-column prop="menuSort" align="center" label="排序">
         <template slot-scope="scope">
-          {{ scope.row.menuSort }}
+          {{ scope.row.orderBy }}
         </template>
       </el-table-column>
-      <el-table-column :show-overflow-tooltip="true" prop="permission" label="权限标识" />
-      <el-table-column :show-overflow-tooltip="true" prop="component" label="组件路径" />
+      <el-table-column :show-overflow-tooltip="true" prop="url" label="组件路径" />
       <el-table-column prop="iframe" label="外链" width="75px">
         <template slot-scope="scope">
           <span v-if="scope.row.iframe">是</span>
@@ -155,9 +142,9 @@
           <span v-else>是</span>
         </template>
       </el-table-column>
-      <el-table-column prop="createTime" label="创建日期" width="135px">
+      <el-table-column prop="createdAt" label="创建日期" width="135px">
         <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.createTime) }}</span>
+          <span>{{ parseTime(scope.row.createdAt) }}</span>
         </template>
       </el-table-column>
       <el-table-column v-permission="['admin','menu:edit','menu:del']" label="操作" width="130px" align="center" fixed="right">
@@ -183,15 +170,28 @@ import CRUD, { presenter, header, form, crud } from '@crud/crud'
 import rrOperation from '@crud/RR.operation'
 import crudOperation from '@crud/CRUD.operation'
 import udOperation from '@crud/UD.operation'
-import ClassTreeTable from '@/components/Parse/ClassTreeTable'
 
 // crud交由presenter持有
 const defaultForm = { id: null, title: null, menuSort: 999, path: null, component: null, componentName: null, iframe: false, roles: [], pid: 0, icon: null, cache: false, hidden: false, type: 0, permission: null }
 export default {
   name: 'Menu',
-  components: { ClassTreeTable, Treeselect, IconSelect, crudOperation, rrOperation, udOperation },
+  components: { Treeselect, IconSelect, crudOperation, rrOperation, udOperation },
   cruds() {
-    return CRUD({ title: '菜单', url: 'Menu', crudMethod: { ...crudMenu }})
+    return CRUD({
+      title: '菜单',
+      url: 'menu',
+      sort: ['orderBy, asc'],
+      tableType: 'tree',
+      query: {
+        where: {
+          parent: {
+            __type: 'Pointer',
+            className: 'menu',
+            objectId: '0'
+          }
+        }
+      }
+    })
   },
   mixins: [presenter(), header(), form(defaultForm), crud()],
   data() {
@@ -209,33 +209,7 @@ export default {
         path: [
           { required: true, message: '请输入地址', trigger: 'blur' }
         ]
-      },
-
-      className: 'menu',
-      search: {
-        key: 'name',
-        value: '',
-        opts: [
-          { label: '菜单名称', key: 'name' }]
-      },
-      columns: [
-        { field: 'name', label: '菜单标题', isTitle: true, show: true, align: 'left' },
-        { field: 'icon', label: '图标', show: true, type: 'icon' },
-        { field: 'orderBy', label: '排序', show: true },
-        { field: 'url', label: '菜单路径', show: true, align: 'left' },
-        { field: 'createdAt', label: '创建时间', show: true }
-      ],
-      rowBtns: [
-        { label: '详情', click: this.handleDetail, type: 'success', icon: 'el-icon-info' },
-        { label: '编辑', click: this.handleEdit, type: 'primary', icon: 'el-icon-edit' }
-      ],
-      expand: [
-        { field: 'createdAt', label: '创建时间', show: true }
-      ],
-      format: function(property, cellValue) {
-        return cellValue
       }
-
     }
   },
   methods: {
@@ -252,10 +226,21 @@ export default {
       }
     },
     getMenus(tree, treeNode, resolve) {
-      const params = { pid: tree.id }
+      var self = this
+      self.crud.query = {
+        where: {
+          parent: {
+            __type: 'Pointer',
+            className: 'menu',
+            objectId: tree.objectId
+          }
+        }
+      }
+      console.log(this.crud.query)
       setTimeout(() => {
-        crudMenu.getMenus(params).then(res => {
-          resolve(res.content)
+        self.crud.getData((res) => {
+          const { data } = res
+          resolve(data)
         })
       }, 100)
     },
@@ -288,15 +273,6 @@ export default {
     // 选中图标
     selected(name) {
       this.form.icon = name
-    },
-
-    handleCreate() {
-    },
-    handleEdit(item) {
-      console.log(item)
-    },
-    handleDetail(item) {
-      console.log(item)
     }
   }
 }

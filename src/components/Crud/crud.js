@@ -1,4 +1,4 @@
-import { initData, download } from '@/api/data'
+import * as api from '@/api/iotapi'
 import { parseTime, downloadFile } from '@/utils/index'
 import Vue from 'vue'
 
@@ -14,7 +14,7 @@ function CRUD(options) {
   const defaultOptions = {
     tag: 'default',
     // id字段名
-    idField: 'id',
+    idField: 'objectId',
     // 标题
     title: '',
     // 请求数据的url
@@ -32,15 +32,29 @@ function CRUD(options) {
     // 重置表单
     defaultForm: () => {},
     // 排序规则，默认 id 降序， 支持多字段排序 ['id,desc', 'createTime,asc']
-    sort: ['-createdAt'],
+    sort: ['createdAt,desc'],
+    // 表格类型，tree(树形表格),其它为普通表格
+    tableType: 'table',
     // 等待时间
     time: 50,
     // CRUD Method
     crudMethod: {
-      add: (form) => {},
-      del: (id) => {},
-      edit: (form) => {},
-      get: (id) => {}
+      query: () => {
+        var key = 'get_classes_' + crud.url
+        return api[key.toLowerCase()](crud.getQueryParams())
+      },
+      add: (form) => {
+        console.log(form)
+      },
+      del: (id) => {
+        console.log(id)
+      },
+      edit: (form) => {
+        console.log(form)
+      },
+      get: (id) => {
+        console.log(id)
+      }
     },
     // 主页操作栏显示哪些按钮
     optShow: {
@@ -123,34 +137,50 @@ function CRUD(options) {
       crud.page.page = 1
       crud.refresh()
     },
+    getData(resolve, reject) {
+      crud.loading = true
+      // 请求数据
+      console.log(crud.url)
+      crud.crudMethod.query().then(res => {
+        const { results, count } = res
+        var data = []
+        if (crud.tableType && crud.tableType === 'tree') {
+          results.map(row => {
+            row.hasChildren = true
+            data.push(row)
+          })
+        } else {
+          data = results
+        }
+        resolve({ data: data, count: count })
+      }).catch(err => {
+        crud.loading = false
+        reject(err)
+      })
+    },
     // 刷新
     refresh() {
       if (!callVmHook(crud, CRUD.HOOK.beforeRefresh)) {
         return
       }
       return new Promise((resolve, reject) => {
-        crud.loading = true
-        // 请求数据
-        console.log(crud.url)
-        initData(crud.url, crud.getQueryParams()).then(data => {
+        crud.getData((res) => {
+          const { data, count } = res
           const table = crud.getTable()
-          if (table.lazy) { // 懒加载子节点数据，清掉已加载的数据
+          if (table && table.lazy) { // 懒加载子节点数据，清掉已加载的数据
             table.store.states.treeData = {}
             table.store.states.lazyTreeNodeMap = {}
           }
-          crud.page.total = data.totalElements
-          crud.data = data.content
+          crud.page.total = count
+          crud.data = data
           crud.resetDataStatus()
           // time 毫秒后显示表格
           setTimeout(() => {
             crud.loading = false
             callVmHook(crud, CRUD.HOOK.afterRefresh)
           }, crud.time)
-          resolve(data)
-        }).catch(err => {
-          crud.loading = false
-          reject(err)
-        })
+          resolve(res)
+        }, reject)
       })
     },
     /**
@@ -330,7 +360,7 @@ function CRUD(options) {
      */
     doExport() {
       crud.downloadLoading = true
-      download(crud.url + '/download', crud.getQueryParams()).then(result => {
+      crud.crudMethod.query().then(result => {
         downloadFile(result, crud.title + '数据', 'xlsx')
         crud.downloadLoading = false
       }).catch(() => {
@@ -348,13 +378,34 @@ function CRUD(options) {
       Object.keys(crud.params).length !== 0 && Object.keys(crud.params).forEach(item => {
         if (crud.params[item] === null || crud.params[item] === '') crud.params[item] = undefined
       })
-      return {
-        skip: crud.page.page - 1,
-        limit: crud.page.size,
-        order: crud.sort.join(','),
+      var query = {
         ...crud.query,
         ...crud.params
       }
+      if (crud.page.size && crud.page.size >= 0) {
+        query.limit = crud.page.size
+      }
+      if (query.limit > 0 && crud.page.page && crud.page.page >= 0) {
+        query.skip = (crud.page.page - 1) * query.limit
+      }
+      query.keys = 'count(*)'
+      if (crud.query && crud.query.keys && crud.query.keys.length > 0) {
+        query.keys += crud.query.keys
+      }
+      if (crud.sort && crud.sort.length >= 0) {
+        var order = ''
+        crud.sort.forEach(item => {
+          var arr = item.split(',')
+          order += arr[1].trim().toLowerCase() === 'asc' ? arr[0] : '-' + arr[0]
+        })
+        if (order.length > 0) {
+          query.order = order
+        }
+      }
+      if (crud.query && crud.query.where) {
+        query.where = JSON.stringify(crud.query.where)
+      }
+      return query
     },
     // 当前页改变
     pageChangeHandler(e) {

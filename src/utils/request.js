@@ -43,52 +43,60 @@ service.interceptors.response.use(
     }
   },
   error => {
-    console.log(1111)
-    const res = error.response
-    const status = res.status
-    switch (status) {
-      case 404:
-        Message({
-          message: Error(res.data.error ? res.data.error : res.statusText).msg,
-          type: 'error',
-          duration: 5 * 1000
-        })
-        break
-      case 400:
-      case 500:
-        Message({
-          message: Error(res.data.error ? res.data.error : res.data).msg,
-          type: 'error',
-          duration: 5 * 1000
-        })
-        break
-      case 403:
-        Message({
-          message: Error(res.data.error ? res.data.error : res.data).msg,
-          type: 'error',
-          duration: 5 * 1000
-        })
-        router.push({ path: '/401' })
-        break
-      case 401:
-        MessageBox.confirm(Error(res.data.error).msg, '系统提示', {
-          confirmButtonText: '重新登录',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }
-        ).then(() => {
-          store.dispatch('LogOut').then(() => {
-            location.reload()
+    console.log(error)
+    if (error.message && typeof (error.message) === 'string') {
+      Message({
+        message: Error(error.message.toString()).msg,
+        type: 'error',
+        duration: 5 * 1000
+      })
+    } else {
+      const res = error.response
+      const status = res.status
+      switch (status) {
+        case 404:
+          Message({
+            message: Error(res.data.error ? res.data.error : res.statusText).msg,
+            type: 'error',
+            duration: 5 * 1000
           })
-        })
-        break
-      default:
-        Message({
-          message: Error(error).msg,
-          type: 'error',
-          duration: 5 * 1000
-        })
-        break
+          break
+        case 400:
+        case 500:
+          Message({
+            message: Error(res.data.error ? res.data.error : res.data).msg,
+            type: 'error',
+            duration: 5 * 1000
+          })
+          break
+        case 403:
+          Message({
+            message: Error(res.data.error ? res.data.error : res.data).msg,
+            type: 'error',
+            duration: 5 * 1000
+          })
+          router.push({ path: '/401' })
+          break
+        case 401:
+          MessageBox.confirm(Error(res.data.error).msg, '系统提示', {
+            confirmButtonText: '重新登录',
+            cancelButtonText: '取消',
+            type: 'warning'
+          }
+          ).then(() => {
+            store.dispatch('LogOut').then(() => {
+              location.reload()
+            })
+          })
+          break
+        default:
+          Message({
+            message: Error(error).msg,
+            type: 'error',
+            duration: 5 * 1000
+          })
+          break
+      }
     }
     return Promise.reject(error)
   }
