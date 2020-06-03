@@ -106,7 +106,7 @@
       :load="getMenus"
       :data="crud.data"
       :tree-props="{children: 'children', hasChildren: 'hasChildren'}"
-      row-key="id"
+      row-key="objectId"
       @select="crud.selectChange"
       @select-all="crud.selectAllChange"
       @selection-change="crud.selectionChangeHandler"
@@ -237,12 +237,10 @@ export default {
         }
       }
       console.log(this.crud.query)
-      setTimeout(() => {
-        self.crud.getData((res) => {
-          const { data } = res
-          resolve(data)
-        })
-      }, 100)
+      self.crud.getData((res) => {
+        const { data } = res
+        resolve(data)
+      })
     },
     getSupDepts(id) {
       crudMenu.getMenuSuperior(id).then(res => {

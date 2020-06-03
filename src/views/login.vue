@@ -1,16 +1,16 @@
 <template>
   <div class="login" :style="'background-image:url('+ Background +');'">
     <el-form ref="loginForm" :model="loginForm" :rules="loginRules" label-position="left" label-width="0px" class="login-form">
-      <h3 class="title">
+      <h3 class="title" style="font-size: 35px;">
         艾里克物联平台
       </h3>
       <el-form-item prop="username">
-        <el-input v-model="loginForm.username" type="text" auto-complete="off" placeholder="账号">
+        <el-input v-model="loginForm.username" type="text" auto-complete="off" placeholder="请输入账号">
           <svg-icon slot="prefix" icon-class="user" class="el-input__icon input-icon" />
         </el-input>
       </el-form-item>
       <el-form-item prop="password">
-        <el-input v-model="loginForm.password" type="password" auto-complete="off" placeholder="密码" @keyup.enter.native="handleLogin">
+        <el-input v-model="loginForm.password" type="password" auto-complete="off" placeholder="请输入密码" @keyup.enter.native="handleLogin">
           <svg-icon slot="prefix" icon-class="password" class="el-input__icon input-icon" />
         </el-input>
       </el-form-item>
@@ -22,7 +22,7 @@
       <!--<img :src="codeUrl" @click="getCode">-->
       <!--</div>-->
       <!--</el-form-item>-->
-      <el-checkbox v-model="loginForm.rememberMe" style="margin:0 0 25px 0;">
+      <el-checkbox v-model="loginForm.rememberMe" style="margin:0 0 25px 0;color:white;">
         记住我
       </el-checkbox>
       <el-form-item style="width:100%;">
@@ -45,7 +45,7 @@
 // import { encrypt } from '@/utils/rsaEncrypt'
 import Config from '@/settings'
 import Cookies from 'js-cookie'
-import Background from '@/assets/images/background.gif'
+import Background from '@/assets/images/bg.jpg'
 export default {
   name: 'Login',
   data() {
@@ -154,22 +154,36 @@ export default {
     font-size: 25px;
     margin: 0 auto 30px auto;
     text-align: center;
-    color: #707070;
+    color: #ffffff;
+  }
+
+  .el-form-item {
+    margin-bottom: 25px;
   }
 
   .login-form {
-    width: 450px;
+    position: absolute;
+    @media (min-width: 800px) {
+      right: 10%;
+    }
     border-radius: 6px;
-    background: #ffffff;
-    padding: 25px 25px 5px 25px;
+    background: #10224b;
+    padding: 40px 50px 35px 50px;
     .el-input {
       height: 38px;
+      width: 350px;
       input {
-        height: 38px;
+        font-size:15px;
+        border:0px;
+        border-bottom:1px solid silver;
+        color:white;
+        background-color: rgba(0, 0, 0, 0);// 透明背景
+        border-radius:0px; // 设置圆角
       }
     }
     .input-icon{
-      height: 39px;width: 14px;margin-left: 2px;
+      margin-bottom:10px;
+      height: 39px; width: 14px; margin-left: 2px;
     }
   }
   .login-tip {

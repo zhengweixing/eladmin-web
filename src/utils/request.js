@@ -44,14 +44,14 @@ service.interceptors.response.use(
   },
   error => {
     console.log(error)
-    if (error.message && typeof (error.message) === 'string') {
+    const res = error.response
+    if (!res) {
       Message({
         message: Error(error.message.toString()).msg,
         type: 'error',
         duration: 5 * 1000
       })
     } else {
-      const res = error.response
       const status = res.status
       switch (status) {
         case 404:
