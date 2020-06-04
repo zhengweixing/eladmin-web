@@ -116,11 +116,8 @@ export default {
             normal: {
               color: '#3888fa',
               lineStyle: {
-                color: '#3888fa',
+                color: '#34bfa3',
                 width: 2
-              },
-              areaStyle: {
-                color: '#f3f8ff'
               }
             }
           },

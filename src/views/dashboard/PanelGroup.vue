@@ -83,10 +83,9 @@ export default {
     cursor: pointer;
     font-size: 12px;
     position: relative;
-    overflow: hidden;
     color: #fff !important;
-    border: 1px solid silver;
     border-radius:6px;
+    background-image: linear-gradient(rgba(0, 0, 0, 0.2), #0000003d);
 
     &:hover {
       .card-panel-icon-wrapper {

@@ -1,11 +1,11 @@
 <template>
   <div class="dashboard-container">
-    <div class="dashboard-editor-container" :style="'background:url('+ Background +'); '">
+    <div class="dashboard-editor-container">
 
       <panel-group @handleSetLineChartData="handleSetLineChartData" />
 
-      <el-row style="background:#fff;padding:16px 16px 0;margin-bottom:32px;">
-        <line-chart :chart-data="lineChartData" />
+      <el-row>
+        <line-chart :chart-data="lineChartData" class-name="chart-wrapper" />
       </el-row>
       <el-row :gutter="32">
         <el-col :xs="24" :sm="24" :lg="8">
@@ -34,7 +34,7 @@ import LineChart from './dashboard/LineChart'
 import RadarChart from '@/components/Echarts/RadarChart'
 import PieChart from '@/components/Echarts/PieChart'
 import BarChart from '@/components/Echarts/BarChart'
-import Background from '@/assets/images/map_bg.jpg'
+// import Background from '@/assets/images/map_bg.jpg'
 
 const lineChartData = {
   newVisitis: {
@@ -66,7 +66,6 @@ export default {
   },
   data() {
     return {
-      Background: Background,
       lineChartData: lineChartData.newVisitis
     }
   },
@@ -79,18 +78,17 @@ export default {
 </script>
 
 <style rel="stylesheet/scss" lang="scss" scoped>
+  .dashboard-container{
+    background: #032e9e;
+  }
   .dashboard-editor-container {
     padding: 32px;
     position: relative;
-    background-repeat: no-repeat !important;
-    background-size:100% 100% !important;
-    background-attachment:fixed !important;
-    background-position:top left;
-
     .chart-wrapper {
-      background: #fff;
       padding: 16px 16px 0;
       margin-bottom: 32px;
+      border-radius:6px;
+      background-image: linear-gradient(rgba(0, 0, 0, 0.2), #0000003d);
     }
   }
 
