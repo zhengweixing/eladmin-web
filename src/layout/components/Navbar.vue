@@ -18,7 +18,7 @@
 
       </template>
 
-      <el-dropdown class="avatar-container right-menu-item hover-effect" trigger="click">
+      <el-dropdown class="avatar-container right-menu-item hover-effect" trigger="click" size="medium">
 
         <div class="avatar-wrapper">
           <el-avatar :src="avatar+'?imageView2/1/w/80/h/80'" class="user-avatar" @error="true">
@@ -145,6 +145,10 @@ export default {
     vertical-align: top;
   }
 
+  .el-dropdown-menu__item {
+    height: 30px !important;
+  }
+
   .right-menu {
     float: right;
     height: 100%;
@@ -171,9 +175,7 @@ export default {
         }
       }
     }
-    .el-icon-s-custom{
-      font-size:35px;
-    }
+
     .avatar-container {
       margin-right: 30px;
 
@@ -186,6 +188,7 @@ export default {
           width: 40px;
           height: 40px;
           border-radius: 10px;
+          font-size: 38px;
         }
 
         .el-icon-caret-bottom {

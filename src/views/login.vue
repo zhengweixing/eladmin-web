@@ -1,7 +1,7 @@
 <template>
   <div class="login" :style="'background-image:url('+ Background +');'">
     <el-form ref="loginForm" :model="loginForm" :rules="loginRules" label-position="left" label-width="0px" class="login-form">
-      <h3 class="title" style="font-size: 35px;">
+      <h3 class="title">
         艾里克物联平台
       </h3>
       <el-form-item prop="username">
@@ -26,7 +26,7 @@
         记住我
       </el-checkbox>
       <el-form-item style="width:100%;">
-        <el-button :loading="loading" size="medium" type="primary" style="width:100%;" @click.native.prevent="handleLogin">
+        <el-button :loading="loading" size="medium" type="primary" class="loginBtn" @click.native.prevent="handleLogin">
           <span v-if="!loading">登 录</span>
           <span v-else>登 录 中...</span>
         </el-button>
@@ -151,7 +151,7 @@ export default {
     background-size: cover;
   }
   .title {
-    font-size: 25px;
+    font-size: 27px;
     margin: 0 auto 30px auto;
     text-align: center;
     color: #ffffff;
@@ -160,7 +160,12 @@ export default {
   .el-form-item {
     margin-bottom: 25px;
   }
-
+  .loginBtn {
+    width: 100%;
+    background-color:#24457c;
+    border-color: #24457c;
+    border-radius:0px;
+  }
   .login-form {
     position: absolute;
     @media (min-width: 800px) {

@@ -1,6 +1,6 @@
 <template>
   <div class="dashboard-container">
-    <div class="dashboard-editor-container">
+    <div class="dashboard-editor-container" :style="'background:url('+ Background +'); '">
 
       <panel-group @handleSetLineChartData="handleSetLineChartData" />
 
@@ -34,6 +34,7 @@ import LineChart from './dashboard/LineChart'
 import RadarChart from '@/components/Echarts/RadarChart'
 import PieChart from '@/components/Echarts/PieChart'
 import BarChart from '@/components/Echarts/BarChart'
+import Background from '@/assets/images/map_bg.jpg'
 
 const lineChartData = {
   newVisitis: {
@@ -65,6 +66,7 @@ export default {
   },
   data() {
     return {
+      Background: Background,
       lineChartData: lineChartData.newVisitis
     }
   },
@@ -79,8 +81,11 @@ export default {
 <style rel="stylesheet/scss" lang="scss" scoped>
   .dashboard-editor-container {
     padding: 32px;
-    background-color: rgb(240, 242, 245);
     position: relative;
+    background-repeat: no-repeat !important;
+    background-size:100% 100% !important;
+    background-attachment:fixed !important;
+    background-position:top left;
 
     .chart-wrapper {
       background: #fff;
