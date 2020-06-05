@@ -1,60 +1,61 @@
 <template>
-  <div style="background-color:#0058ac;height: 100%" align="middle">
-    <div class="login">
-      <el-row>
-        <el-col :span="24" class="title">艾里克物联网开发平台</el-col>
-      </el-row>
-      <el-row type="flex" justify="center">
-        <el-col :sm="12" :md="10" :lg="10" :xl="10" class="hidden-xs-only login-left" :style="'background-image:url('+ Background +');'" />
-        <el-col :xs="20" :sm="12" :md="6" :lg="6" :xl="6" class="login-right">
-          <div class="subtitle">用户登录</div>
-          <el-form ref="loginForm" :model="loginForm" :rules="loginRules" label-position="left" label-width="0px" class="login-form">
-            <el-form-item prop="username">
-              <el-input v-model="loginForm.username" type="text" auto-complete="off" placeholder="请输入账号">
-                <svg-icon slot="prefix" icon-class="user" class="el-input__icon input-icon" />
-              </el-input>
-            </el-form-item>
-            <el-form-item prop="password">
-              <el-input v-model="loginForm.password" type="password" auto-complete="off" placeholder="请输入密码" @keyup.enter.native="handleLogin">
-                <svg-icon slot="prefix" icon-class="password" class="el-input__icon input-icon" />
-              </el-input>
-            </el-form-item>
-            <!--<el-form-item prop="code">-->
-            <!--<el-input v-model="loginForm.code" auto-complete="off" placeholder="验证码" style="width: 63%" @keyup.enter.native="handleLogin">-->
-            <!--<svg-icon slot="prefix" icon-class="validCode" class="el-input__icon input-icon" />-->
-            <!--</el-input>-->
-            <!--<div class="login-code">-->
-            <!--<img :src="codeUrl" @click="getCode">-->
-            <!--</div>-->
-            <!--</el-form-item>-->
-            <el-checkbox v-model="loginForm.rememberMe" style="margin:0 0 25px 0;float:left;">
-              记住我
-            </el-checkbox>
-            <el-form-item style="width:100%;">
-              <el-button :loading="loading" size="medium" type="primary" class="loginBtn" @click.native.prevent="handleLogin">
-                <span v-if="!loading">登 录</span>
-                <span v-else>登 录 中...</span>
-              </el-button>
-            </el-form-item>
-          </el-form>
-        </el-col>
-      </el-row>
-      <!--  底部  -->
-      <el-row>
-        <el-col :span="24">
-          <div v-if="$store.state.settings.showFooter" id="el-login-footer">
-            <span v-html="$store.state.settings.footerTxt" />
-            <span> ⋅ </span>
-            <a href="http://www.beian.miit.gov.cn" target="_blank">{{ $store.state.settings.caseNumber }}</a>
-          </div>
-        </el-col>
-      </el-row>
-    </div>
+  <div class="login">
+    <el-row>
+      <el-col :span="24" class="title">艾里克物联网开发平台</el-col>
+    </el-row>
+    <el-row type="flex" justify="center">
+      <el-col :sm="14" :md="11" :lg="11" :xl="11" class="hidden-xs-only login-left" :style="'background-image:url('+ Background +');'">
+        <Adbox />
+      </el-col>
+      <el-col :xs="24" :sm="8" :md="7" :lg="7" :xl="7" class="login-right">
+        <div class="subtitle">用户登录</div>
+        <el-form ref="loginForm" :model="loginForm" :rules="loginRules" label-position="left" label-width="0px" class="login-form">
+          <el-form-item prop="username">
+            <el-input v-model="loginForm.username" type="text" auto-complete="off" placeholder="请输入账号">
+              <svg-icon slot="prefix" icon-class="user" class="el-input__icon input-icon" />
+            </el-input>
+          </el-form-item>
+          <el-form-item prop="password">
+            <el-input v-model="loginForm.password" type="password" auto-complete="off" placeholder="请输入密码" @keyup.enter.native="handleLogin">
+              <svg-icon slot="prefix" icon-class="password" class="el-input__icon input-icon" />
+            </el-input>
+          </el-form-item>
+          <!--<el-form-item prop="code">-->
+          <!--<el-input v-model="loginForm.code" auto-complete="off" placeholder="验证码" style="width: 63%" @keyup.enter.native="handleLogin">-->
+          <!--<svg-icon slot="prefix" icon-class="validCode" class="el-input__icon input-icon" />-->
+          <!--</el-input>-->
+          <!--<div class="login-code">-->
+          <!--<img :src="codeUrl" @click="getCode">-->
+          <!--</div>-->
+          <!--</el-form-item>-->
+          <el-checkbox v-model="loginForm.rememberMe" style="margin:0 0 25px 0;float:left;">
+            记住我
+          </el-checkbox>
+          <el-form-item style="width:100%;">
+            <el-button :loading="loading" size="medium" type="primary" class="loginBtn" @click.native.prevent="handleLogin">
+              <span v-if="!loading">登 录</span>
+              <span v-else>登 录 中...</span>
+            </el-button>
+          </el-form-item>
+        </el-form>
+      </el-col>
+    </el-row>
+    <!--  底部  -->
+    <el-row>
+      <el-col :span="24">
+        <div v-if="$store.state.settings.showFooter" id="el-login-footer">
+          <span v-html="$store.state.settings.footerTxt" />
+          <span> ⋅ </span>
+          <a href="http://www.beian.miit.gov.cn" target="_blank">{{ $store.state.settings.caseNumber }}</a>
+        </div>
+      </el-col>
+    </el-row>
   </div>
 </template>
 
 <script>
 import 'element-ui/lib/theme-chalk/display.css'
+import Adbox from './components/Adbox'
 // import { encrypt } from '@/utils/rsaEncrypt'
 import Config from '@/settings'
 import Cookies from 'js-cookie'
@@ -64,6 +65,9 @@ import Background from '@/assets/images/login_left.png'
 
 export default {
   name: 'Login',
+  components: {
+    Adbox
+  },
   data() {
     return {
       Background: Background,
@@ -159,6 +163,15 @@ export default {
 </script>
 
 <style rel="stylesheet/scss" lang="scss">
+
+  body{
+    background-color:#0058ac;height: 100%
+  }
+
+  #adbox{
+    border-top-left-radius: 10px;
+  }
+
   .login {
     top: 10%;
     position: relative;
@@ -175,14 +188,13 @@ export default {
   }
 
   .subtitle {
-    padding-top: 10px;
+    padding-top: 15px;
     font-size: 25px;
     text-align: center;
     color:#0064c8;
   }
 
   .login-left, .login-right {
-    padding: 10px 0 10px 0;
     height:320px;
   }
 
@@ -191,12 +203,13 @@ export default {
     background-position: center center;
     border-top-left-radius: 10px;
     border-bottom-left-radius: 10px;
-    background-size: auto 100%;
+    background-size: 100% 100%;
   }
 
   .login-right {
     color:#fff;
     background: #fff;
+    max-width: 450px;
     border-bottom-right-radius: 10px;
     border-top-right-radius: 10px;
   }
