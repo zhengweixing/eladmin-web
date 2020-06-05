@@ -5,8 +5,8 @@
         <el-col :span="24" class="title">艾里克物联网开发平台</el-col>
       </el-row>
       <el-row type="flex" justify="center">
-        <el-col :xs="24" :sm="10" :md="10" :lg="10" :xl="10" class="hidden-md-and-down login-left" :style="'background-image:url('+ Background +');'" />
-        <el-col :xs="24" :sm="6" :md="6" :lg="6" :xl="6" class="login-right">
+        <el-col :sm="12" :md="10" :lg="10" :xl="10" class="hidden-xs-only login-left" :style="'background-image:url('+ Background +');'" />
+        <el-col :xs="20" :sm="12" :md="6" :lg="6" :xl="6" class="login-right">
           <div class="subtitle">用户登录</div>
           <el-form ref="loginForm" :model="loginForm" :rules="loginRules" label-position="left" label-width="0px" class="login-form">
             <el-form-item prop="username">
@@ -201,7 +201,7 @@ export default {
     border-top-right-radius: 10px;
   }
 
-  @media screen and (max-width: 600px) {
+  @media screen and (max-width: 768px) {
     .title{
       font-size: 25px;
     }
