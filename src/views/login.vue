@@ -149,6 +149,7 @@ export default {
     align-items: center;
     height: 100%;
     background-size: cover;
+    background-position: center bottom;
   }
   .title {
     font-size: 27px;
@@ -164,7 +165,7 @@ export default {
     width: 100%;
     background-color:#24457c;
     border-color: #24457c;
-    border-radius:0px;
+    border-radius:0;
   }
   .login-form {
     position: absolute;
