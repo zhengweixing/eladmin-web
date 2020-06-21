@@ -85,7 +85,7 @@ export default {
     position: relative;
     color: #fff !important;
     border-radius:6px;
-    background-image: linear-gradient(rgba(0, 0, 0, 0.2), #0000003d);
+    background-color:black;
 
     &:hover {
       .card-panel-icon-wrapper {

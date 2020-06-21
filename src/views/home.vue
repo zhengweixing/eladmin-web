@@ -79,8 +79,13 @@ export default {
 
 <style rel="stylesheet/scss" lang="scss" scoped>
   .dashboard-container{
-    background: #1b3a88;
+    /*background: #1b3a88;*/
   }
+  .chart-wrapper {
+    background-color: black !important;
+    /*background-image: linear-gradient(rgba(0, 0, 0, 0.2), #0000003d);*/
+  }
+
   .dashboard-editor-container {
     padding: 32px;
     position: relative;

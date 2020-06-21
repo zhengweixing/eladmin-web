@@ -236,7 +236,7 @@ export default {
           }
         }
       }
-      console.log(this.crud.query)
+      console.log(111111)
       self.crud.getData((res) => {
         const { data } = res
         resolve(data)

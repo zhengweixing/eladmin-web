@@ -16,7 +16,6 @@ router.beforeEach((to, from, next) => {
     document.title = to.meta.title + ' - ' + Config.title
   }
   NProgress.start()
-  console.log(111111)
   if (getToken()) {
     // 已登录且要跳转的页面是登录页
     if (to.path === '/login') {
