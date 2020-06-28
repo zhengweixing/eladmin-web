@@ -20,6 +20,7 @@ const getters = {
   updateAvatarApi: state => state.api.updateAvatarApi,
   qiNiuUploadApi: state => state.api.qiNiuUploadApi,
   sqlApi: state => state.api.sqlApi,
+  iotapi: state => state.api.iotApi,
   swaggerApi: state => state.api.swaggerApi
 }
 export default getters
