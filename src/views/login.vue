@@ -164,18 +164,15 @@ export default {
 
 <style rel="stylesheet/scss" lang="scss">
 
-  body{
-    background-color:#0058ac;height: 100%
-  }
-
   #adbox{
     border-top-left-radius: 10px;
   }
 
   .login {
     top: 10%;
-    position: relative;
     padding:30px;
+    height: 100%;
+    background-color:#0058ac;
   }
 
   .title {
@@ -243,8 +240,8 @@ export default {
   .login-form {
     padding: 20px;
     .el-input {
-      height: 38px;
       input {
+        height: 38px;
         font-size:15px;
         border:0;
         border-bottom:1px solid silver;
@@ -272,5 +269,9 @@ export default {
       vertical-align:middle
     }
   }
-
+  input:-internal-autofill-previewed,
+  input:-internal-autofill-selected {
+    -webkit-text-fill-color: #807c7c;
+    transition: background-color 5000s ease-out 0.5s;
+  }
 </style>
