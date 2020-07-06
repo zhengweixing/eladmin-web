@@ -33,8 +33,6 @@ function CRUD(options) {
     defaultForm: () => {},
     // 排序规则，默认 id 降序， 支持多字段排序 ['id,desc', 'createTime,asc']
     sort: ['createdAt,desc'],
-    // 表格类型，tree(树形表格),其它为普通表格
-    tableType: 'table',
     // 等待时间
     time: 50,
     // CRUD Method
@@ -143,16 +141,7 @@ function CRUD(options) {
       console.log(crud.url)
       crud.crudMethod.query().then(res => {
         const { results, count } = res
-        var data = []
-        if (crud.tableType && crud.tableType === 'tree') {
-          results.map(row => {
-            row.hasChildren = true
-            data.push(row)
-          })
-        } else {
-          data = results
-        }
-        resolve({ data: data, count: count })
+        resolve({ data: results, count: count })
       }).catch(err => {
         crud.loading = false
         reject(err)

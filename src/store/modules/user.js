@@ -41,7 +41,6 @@ const user = {
   actions: {
     // 登录
     Login({ commit }, userInfo) {
-      console.log('11111')
       const rememberMe = userInfo.rememberMe
       return new Promise((resolve, reject) => {
         get_login(userInfo).then(res => {

@@ -181,7 +181,6 @@ export default {
       title: '菜单',
       url: 'menu',
       sort: ['orderBy, asc'],
-      tableType: 'tree',
       query: {
         where: {
           parent: {
@@ -226,6 +225,7 @@ export default {
       }
     },
     getMenus(tree, treeNode, resolve) {
+      console.log(111111)
       var self = this
       self.crud.query = {
         where: {
@@ -237,8 +237,12 @@ export default {
         }
       }
       console.log(111111)
-      self.crud.getData((res) => {
-        const { data } = res
+      self.crud.getData(results => {
+        var data = []
+        results.map(row => {
+          row.hasChildren = true
+          data.push(row)
+        })
         resolve(data)
       })
     },
