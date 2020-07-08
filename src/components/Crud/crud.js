@@ -35,6 +35,8 @@ function CRUD(options) {
     sort: ['createdAt,desc'],
     // 等待时间
     time: 50,
+    // 显示方式
+    showType: 'table',
     // CRUD Method
     crudMethod: {
       query: () => {
@@ -141,7 +143,16 @@ function CRUD(options) {
       console.log(crud.url)
       crud.crudMethod.query().then(res => {
         const { results, count } = res
-        resolve({ data: results, count: count })
+        var items = []
+        if (crud.showType === 'tree') {
+          results.map(row => {
+            row.hasChildren = true
+            items.push(row)
+          })
+        } else {
+          items = results
+        }
+        resolve({ data: items, count: count })
       }).catch(err => {
         crud.loading = false
         reject(err)

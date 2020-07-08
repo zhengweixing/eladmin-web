@@ -180,6 +180,7 @@ export default {
     return CRUD({
       title: '菜单',
       url: 'menu',
+      showType: 'tree',
       sort: ['orderBy, asc'],
       query: {
         where: {
@@ -238,11 +239,7 @@ export default {
       }
       console.log(111111)
       self.crud.getData(results => {
-        var data = []
-        results.map(row => {
-          row.hasChildren = true
-          data.push(row)
-        })
+        var data = results.data
         resolve(data)
       })
     },
