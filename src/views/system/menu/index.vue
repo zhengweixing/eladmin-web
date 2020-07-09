@@ -213,6 +213,17 @@ export default {
     }
   },
   methods: {
+    [CRUD.HOOK.beforeRefresh](crud, form) {
+      this.crud.query = {
+        where: {
+          parent: {
+            __type: 'Pointer',
+            className: 'menu',
+            objectId: '0'
+          }
+        }
+      }
+    },
     // 新增与编辑前做的操作
     [CRUD.HOOK.afterToCU](crud, form) {
       this.menus = []
@@ -226,7 +237,6 @@ export default {
       }
     },
     getMenus(tree, treeNode, resolve) {
-      console.log(111111)
       var self = this
       self.crud.query = {
         where: {
@@ -237,7 +247,6 @@ export default {
           }
         }
       }
-      console.log(111111)
       self.crud.getData(results => {
         var data = results.data
         resolve(data)

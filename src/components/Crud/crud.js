@@ -140,19 +140,20 @@ function CRUD(options) {
     getData(resolve, reject) {
       crud.loading = true
       // 请求数据
-      console.log(crud.url)
       crud.crudMethod.query().then(res => {
         const { results, count } = res
         var items = []
         if (crud.showType === 'tree') {
           results.map(row => {
             row.hasChildren = true
+            row.children = []
             items.push(row)
           })
         } else {
           items = results
         }
         resolve({ data: items, count: count })
+        crud.loading = false
       }).catch(err => {
         crud.loading = false
         reject(err)
@@ -576,9 +577,9 @@ function CRUD(options) {
           return
         }
         const lazyTreeNodeMap = table.store.states.lazyTreeNodeMap
-        const children = lazyTreeNodeMap[row.id]
-        row.children = children
-        children.forEach(ele => {
+        const children = lazyTreeNodeMap[row[that.idField]]
+        row.children = children || []
+        row.children.forEach(ele => {
           const id = crud.getDataId(ele)
           if (that.dataStatus[id] === undefined) {
             that.dataStatus[id] = {
